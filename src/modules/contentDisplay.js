@@ -14,7 +14,15 @@ const contentDisplay = (() => {
     parent.appendChild(image);
   }
 
-  return { makeDiv, makeIMG }
+  const makeButton = (buttonClass, parentIdentifier, text) => {
+    const parent = document.querySelector(parentIdentifier);
+    const button = document.createElement('button');
+    button.textContent = text;
+    button.classList.add(buttonClass);
+    parent.appendChild(button);
+  }
+
+  return { makeDiv, makeIMG, makeButton }
 
 })();
 
