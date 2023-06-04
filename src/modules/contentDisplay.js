@@ -12,7 +12,9 @@ const contentDisplay = (() => {
     const image = document.createElement('img');
     image.id = imageID;
     parent.appendChild(image);
-}
+  }
+
+  return { makeDiv, makeIMG }
 
 })();
 

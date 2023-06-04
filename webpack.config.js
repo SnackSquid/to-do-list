@@ -1,15 +1,31 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 
 module.exports = {
-  entry: './src/index.js',
   mode: 'development',
-  output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'dist'),
+  entry: {
+    index: {
+      import: './src/index.js',
+    },
   },
+  output: {
+    filename: '[name].[contenthash].js',
+    path: path.resolve(__dirname, 'dist'),
+    clean: true,
+  },
+  devtool: 'inline-source-map',
   devServer: {
     static: './dist',
   },
+  optimization: {
+    runtimeChunk: 'single',
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Caching',
+    }),
+  ],
   module: {
     rules: [
       {
@@ -21,8 +37,5 @@ module.exports = {
         type: 'asset/resource',
       },
     ],
-  },
-  optimization: {
-    runtimeChunk: 'single',
   },
 };

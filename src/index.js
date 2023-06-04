@@ -1,5 +1,5 @@
 import './style.css';
-import "./modules/contentDisplay.js";
+import contentDisplay from './modules/contentDisplay.js';
 
 
-makeDiv("test", ".main")
+contentDisplay.makeDiv("main", "body");
