@@ -22,7 +22,21 @@ const contentDisplay = (() => {
     parent.appendChild(button);
   }
 
-  return { makeDiv, makeIMG, makeButton }
+  const makeForm = (formClass, parentIdentifier) => {
+    const parent = document.querySelector(parentIdentifier);
+    const form = document.createElement('form');
+    form.classList.add(formClass);
+    parent.appendChild(form);
+  }
+
+  const makeInput = (fieldClass, parentIdentifier, type) => {
+    const parent = document.querySelector(parentIdentifier);
+    const label = document.createElement('label');
+    const input = document.createElement('input');
+
+  }
+
+  return { makeDiv, makeIMG, makeButton, makeInput, makeForm }
 
 })();
 
