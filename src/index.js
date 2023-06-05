@@ -1,6 +1,9 @@
+"use strict";
+
 import './css/style.css';
 import 'md5';
 import contentDisplay from './modules/contentDisplay.js';
+import Task from './modules/taskController';
 
 // needed to import md5
 const md5 = require('md5')
@@ -10,21 +13,23 @@ const IDGenerator = () => {
   console.log(md5(rand))
 };
 
-// build the page main div is the anchor of the page
-contentDisplay.makeDiv('main', 'body');
-// create a form to attach the task creation inputs to
-const taskCreatorCard = '.taskCreator';
-contentDisplay.makeDiv('taskCreator', '.main');
-contentDisplay.makeForm('taskInput', taskCreatorCard)
-const taskInput = '.taskInput';
-contentDisplay.makeInput('name', taskInput, 'text')
-contentDisplay.makeInput('details', taskInput, 'text')
-contentDisplay.makeInput('due', taskInput, 'datetime-local', 'Due date:')
+const taskList = {
+  "tasks": []
+}
+const testDate = new Date();
+const testTask =  new Task('6241b155328acadfdfa617e96e712354', 'Test', 'This is a test task', testDate, 'High', 'Work');
 
-contentDisplay.makeSelect('priority', taskInput, ['High', 'Medium', 'Low'], 'Priority')
+for(const property in testTask) {
+  console.log(`${testTask[property]}`)
+}
 
-contentDisplay.makeButton('add', taskCreatorCard, 'Add Task', 'submit')
+testTask.addToList(taskList);
+console.log(taskList["tasks"]);
+testTask.removeFromList(taskList);
+console.log(taskList);
 
+
+contentDisplay.loadPage();
 
 const taskButton = document.querySelector('.add');
 

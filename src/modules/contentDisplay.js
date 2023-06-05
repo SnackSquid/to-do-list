@@ -81,7 +81,33 @@ const contentDisplay = (() => {
     parent.appendChild(select);
   }
 
-  return { makeDiv, makeIMG, makeButton, makeInput, makeForm, makeSelect }
+  const loadPage = () => {
+    // variables to easily change where items are anchored
+    const taskCreatorCard = '.taskCreator';
+    const taskInput = '.taskInput';
+    const main = '.main';
+
+    // build the page main div is the anchor of the page
+    contentDisplay.makeDiv('main', 'body');
+    // header
+    contentDisplay.makeDiv('header', main);
+    contentDisplay.makeDiv('sidebar', main);
+    contentDisplay.makeDiv('board', main);
+    
+    // create a form to attach the task creation inputs to
+    contentDisplay.makeDiv('taskCreator', main);
+    contentDisplay.makeForm('taskInput', taskCreatorCard)
+    // create input fields for the task creation form
+    contentDisplay.makeInput('name', taskInput, 'text')
+    contentDisplay.makeInput('details', taskInput, 'text')
+    contentDisplay.makeInput('due', taskInput, 'datetime-local', 'Due date:')
+    contentDisplay.makeSelect('priority', taskInput, ['High', 'Medium', 'Low'], 'Priority')
+    contentDisplay.makeButton('add', taskCreatorCard, 'Add Task', 'submit')
+    // footer
+    contentDisplay.makeDiv('footer', main);
+  }
+
+  return { makeDiv, makeIMG, makeButton, makeInput, makeForm, makeSelect, loadPage }
 
 })();
 

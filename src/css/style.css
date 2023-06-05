@@ -9,19 +9,37 @@ body {
 .main {
   height: 100vh;
   width: 100vw;
-  margin: 25px;
+  margin: 0;
   display: grid;
-  grid-template-columns: minmax(75px, 1fr) minmax(150px, 3fr)
+  grid-template-columns: minmax(75px, 1fr) minmax(150px, 3fr);
+  grid-template-rows: minmax(50px, 75px) minmax(150px, 1fr) minmax(50px, 75px);
 }
 
-.taskCreator {
-  
-}
+.taskCreator {}
 
 .header {
+  grid-column: 1 / 4;
+  grid-row: 1 / 2;
+  position: sticky;
+  display: flex;
+  background-color: green;
+}
 
+.sidebar {
+  grid-column: 1 / 2;
+  background-color: grey;
+}
+
+.board {
+  grid-column: 2 / 4;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto;
 }
 
 .footer {
-  
+  grid-column: 1 / 4;
+  grid-row: 3 / 4;
+  display: flex;
+  background-color: green;
 }
