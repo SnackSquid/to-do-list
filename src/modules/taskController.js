@@ -17,8 +17,14 @@ class Task {
   }
 
   removeFromList(list) {
+    list["deleted"].push(this);
     return list["tasks"] = list["tasks"].filter(task => task.id != this.id);
   }
+
+  deleteTask(list) {
+    return list["deleted"] = list["deleted"].filter(task => task.id != this.id)
+  }
+  
 }
 
 

@@ -7,6 +7,7 @@ const contentDisplay = (() => {
     // add the div class and append it to the parent
     div.classList.add(divClass);
     parent.appendChild(div);
+    return div;
   }
 
   const makeIMG = (imageID, parentClass) => {
@@ -16,6 +17,7 @@ const contentDisplay = (() => {
     // add class and append the IMG
     image.id = imageID;
     parent.appendChild(image);
+    return image;
   }
 
   const makeButton = (buttonClass, parentIdentifier, text, type) => {
@@ -27,6 +29,7 @@ const contentDisplay = (() => {
     button.type = type;
     button.classList.add(buttonClass);
     parent.appendChild(button);
+    return button;
   }
 
   const makeForm = (formClass, parentIdentifier) => {
@@ -36,6 +39,7 @@ const contentDisplay = (() => {
     // add class and append the form
     form.classList.add(formClass);
     parent.appendChild(form);
+    return form;
   }
 
   const makeInput = (fieldClass, parentIdentifier, type, innerText) => {
@@ -54,6 +58,7 @@ const contentDisplay = (() => {
     input.title = fieldClass;
     parent.appendChild(label);
     parent.appendChild(input);
+    return input;
   }
 
   const makeSelect = (selectClass, parentIdentifier, options, innerText) => {
@@ -69,7 +74,7 @@ const contentDisplay = (() => {
     label.for = selectClass;
     
     select.name = selectClass;
-
+    // loop through the priority options and add them into a dropdown
     for (let i = 0; i < options.length; i++) {
       const option = document.createElement('option');
       option.value = options[i];
@@ -79,6 +84,7 @@ const contentDisplay = (() => {
 
     parent.appendChild(label);
     parent.appendChild(select);
+    return select;
   }
 
   const loadPage = () => {
@@ -86,28 +92,84 @@ const contentDisplay = (() => {
     const taskCreatorCard = '.taskCreator';
     const taskInput = '.taskInput';
     const main = '.main';
+    const sideBar = '.sidebar';
 
     // build the page main div is the anchor of the page
-    contentDisplay.makeDiv('main', 'body');
+    makeDiv('main', 'body');
     // header
-    contentDisplay.makeDiv('header', main);
-    contentDisplay.makeDiv('sidebar', main);
-    contentDisplay.makeDiv('board', main);
+    makeDiv('header', main);
+    makeDiv('sidebar', main);
+    makeDiv('board', main);
     
     // create a form to attach the task creation inputs to
-    contentDisplay.makeDiv('taskCreator', main);
-    contentDisplay.makeForm('taskInput', taskCreatorCard)
+    makeDiv('taskCreator', main);
+    makeForm('taskInput', sideBar)
     // create input fields for the task creation form
-    contentDisplay.makeInput('name', taskInput, 'text')
-    contentDisplay.makeInput('details', taskInput, 'text')
-    contentDisplay.makeInput('due', taskInput, 'datetime-local', 'Due date:')
-    contentDisplay.makeSelect('priority', taskInput, ['High', 'Medium', 'Low'], 'Priority')
-    contentDisplay.makeButton('add', taskCreatorCard, 'Add Task', 'submit')
+    makeInput('name', taskInput, 'text')
+    makeInput('details', taskInput, 'text')
+    makeInput('due', taskInput, 'datetime-local', 'Due date:')
+    makeSelect('priority', taskInput, ['High', 'Medium', 'Low'], 'Priority')
+    makeButton('add', sideBar, 'Add Task', 'submit')
     // footer
-    contentDisplay.makeDiv('footer', main);
+    makeDiv('footer', main);
   }
 
-  return { makeDiv, makeIMG, makeButton, makeInput, makeForm, makeSelect, loadPage }
+  const destroyPage = () => {
+    const div = document.querySelector('.main')
+    div.remove();
+  }
+
+  const reloadPage = () => {
+    destroyPage();
+    loadPage();
+  }
+
+  const taskLoader = (taskList) => {
+    for (let i = 0; i < taskList.length; i++) {
+      // select the task board to append the new element to
+      const board = '.board';
+      // select the current task
+      const task = taskList[i];
+      // create the elements needed for the task card
+      const div = makeDiv('taskCard', board);
+      div.id = task.id;
+
+      const title = document.createElement('h4');
+      const divider = document.createElement('hr');
+      const details = document.createElement('p');
+      const due = document.createElement('p');
+      const category = document.createElement('p');
+      
+
+      // assign && render the info in the task object
+      title.textContent = task.title;
+      details.textContent = task.textContent;
+      due.textContent = task.due;
+      category.textContent = task.category;
+      
+
+      div.appendChild(title);
+      div.appendChild(divider);
+      div.appendChild(details);
+      div.appendChild(category);
+      div.appendChild(due);
+
+      // since task IDs are based off of MD5s, we need to use CSS.escape to handle the IDs that start with numbers
+      const closeButton = makeButton('close', `#${CSS.escape(task.id)}`, 'X', 'button')
+      const select = makeSelect('priority', `#${CSS.escape(task.id)}`, ['High', 'Medium', 'Low'], 'Priority');
+
+      if (task.priority == 'High') {
+        select.selectedIndex = 0;
+      } else if (task.priority == 'Medium') {
+        select.selectedIndex = 1;
+      } else if (task.priority == 'Low') {
+        select.selectedIndex = 2;
+      }
+      
+    }
+  }
+
+  return { makeDiv, makeIMG, makeButton, makeInput, makeForm, makeSelect, loadPage, destroyPage, reloadPage, taskLoader }
 
 })();
 

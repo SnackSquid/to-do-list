@@ -12,24 +12,20 @@ const IDGenerator = () => {
   const rand = Math.random().toString().slice(2, 11)
   console.log(md5(rand))
 };
-
+// create JSON to store tasks
 const taskList = {
-  "tasks": []
+  "tasks": [],
+  "deleted": []
 }
+// test stuff, delete later
 const testDate = new Date();
-const testTask =  new Task('6241b155328acadfdfa617e96e712354', 'Test', 'This is a test task', testDate, 'High', 'Work');
-
-for(const property in testTask) {
-  console.log(`${testTask[property]}`)
-}
+const testTask =  new Task('6241b155328acadfdfa617e96e712354', 'Test', 'This is a test task', testDate, 'Medium', 'Work');
 
 testTask.addToList(taskList);
-console.log(taskList["tasks"]);
-testTask.removeFromList(taskList);
-console.log(taskList);
 
-
+// load the page
 contentDisplay.loadPage();
+contentDisplay.taskLoader(taskList['tasks']);
 
 const taskButton = document.querySelector('.add');
 
