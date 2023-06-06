@@ -124,12 +124,14 @@ const contentDisplay = (() => {
     loadPage();
   }
 
-  const taskLoader = (taskList) => {
-    for (let i = 0; i < taskList.length; i++) {
+  const taskLoader = () => {
+
+    for (let i = 0; i < localStorage.length; i++) {
       // select the task board to append the new element to
       const board = '.board';
       // select the current task
-      const task = taskList[i];
+      const task = localStorage[i];
+      console.log(localStorage[i]);
       // create the elements needed for the task card
       const div = makeDiv('taskCard', board);
       div.id = task.id;
@@ -147,7 +149,6 @@ const contentDisplay = (() => {
       due.textContent = task.due;
       category.textContent = task.category;
       
-
       div.appendChild(title);
       div.appendChild(divider);
       div.appendChild(details);
@@ -169,7 +170,19 @@ const contentDisplay = (() => {
     }
   }
 
-  return { makeDiv, makeIMG, makeButton, makeInput, makeForm, makeSelect, loadPage, destroyPage, reloadPage, taskLoader }
+  const taskRemover = (click) => {
+    click.stopPropagation();
+    click.preventDefault();
+    const taskID = click.target.parentElement.id;
+    const list = taskList["tasks"];
+    for (let i = 0; i < list.length; i++){
+      if (list[i].id == taskID) {
+        list[i].removeFromList(taskList);
+      }
+    }
+  }
+
+  return { makeDiv, makeIMG, makeButton, makeInput, makeForm, makeSelect, loadPage, destroyPage, reloadPage, taskLoader, taskRemover }
 
 })();
 

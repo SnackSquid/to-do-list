@@ -1,36 +1,37 @@
 "use strict";
 
 import './css/style.css';
-import 'md5';
-import contentDisplay from './modules/contentDisplay.js';
-import Task from './modules/taskController';
+import contentDisplay from './modules/DOMController.js';
+import Task from './modules/task';
+import logicController from './modules/logicController';
 
-// needed to import md5
-const md5 = require('md5')
-// generate an MD5 hash of a random number for the task ID, in order to tie the DOM to the JS logic
-const IDGenerator = () => {
-  const rand = Math.random().toString().slice(2, 11)
-  console.log(md5(rand))
-};
-// create JSON to store tasks
-const taskList = {
-  "tasks": [],
-  "deleted": []
+if (logicController.storage) {
+  localStorage.tasks = []
+} else {
+  // create JSON to store tasks
+  const taskList = {
+    "tasks": [],
+    "deleted": []
+  } 
 }
+
 // test stuff, delete later
 const testDate = new Date();
 const testTask =  new Task('6241b155328acadfdfa617e96e712354', 'Test', 'This is a test task', testDate, 'Medium', 'Work');
 
-testTask.addToList(taskList);
+localStorage.temp = testTask;
+console.log(localStorage.temp)
 
+
+//console.log(localStorage.tasks)
 // load the page
 contentDisplay.loadPage();
-contentDisplay.taskLoader(taskList['tasks']);
+contentDisplay.taskLoader();
 
 const taskButton = document.querySelector('.add');
+//taskList["tasks"][0].removeFromList();
 
+const removeTask = document.querySelectorAll('.close');
+removeTask.forEach(button => button.addEventListener('click', contentDisplay.taskRemover));
 
-
-
-
-taskButton.addEventListener('click', IDGenerator)
+taskButton.addEventListener('click', logicController.IDGenerator)

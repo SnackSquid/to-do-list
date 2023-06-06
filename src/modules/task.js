@@ -12,11 +12,12 @@ class Task {
     return this.prop = newValue;
   }
 
-  addToList(list) {
-    return list["tasks"].push(this);
+  addToList() {
+    return localStorage.tasks.push(this);
   }
 
   removeFromList(list) {
+    console.log(list)
     list["deleted"].push(this);
     return list["tasks"] = list["tasks"].filter(task => task.id != this.id);
   }
@@ -24,8 +25,7 @@ class Task {
   deleteTask(list) {
     return list["deleted"] = list["deleted"].filter(task => task.id != this.id)
   }
-  
-}
 
+}
 
 export default Task;

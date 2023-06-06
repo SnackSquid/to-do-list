@@ -21,6 +21,7 @@
   "homepage": "https://github.com/SnackSquid/to-do-list#readme",
   "devDependencies": {
     "css-loader": "^6.8.1",
+    "date-fns": "^2.30.0",
     "html-webpack-plugin": "^5.5.1",
     "md5": "^2.3.0",
     "style-loader": "^3.3.3",
