@@ -27,7 +27,17 @@ body {
 
 .sidebar {
   grid-column: 1 / 2;
+  display: grid;
+  grid-template-rows:
+    minmax(50px, 100px)
+    repeat(5, 1fr);
   background-color: grey;
+}
+
+.taskInput {
+  padding: 20px;
+  display: grid;
+  grid-row: 6/7;
 }
 
 .board {

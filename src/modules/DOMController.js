@@ -1,3 +1,5 @@
+import logicController from "./logicController";
+import 'lodash';
 const contentDisplay = (() => {
 
   const makeDiv = (divClass, parentIdentifier) => {
@@ -8,6 +10,18 @@ const contentDisplay = (() => {
     div.classList.add(divClass);
     parent.appendChild(div);
     return div;
+  }
+  const makeP = (pClass, parentIdentifier, innerText) => {
+    // select the parent to attach the new div to and create a div
+    const parent = document.querySelector(parentIdentifier);
+    const p = document.createElement('p');
+    // add the div class and append it to the parent
+    p.classList.add(pClass);
+    parent.appendChild(p);
+    if (innerText != null) {
+      p.innerText = innerText;
+    }
+    return p;
   }
 
   const makeIMG = (imageID, parentClass) => {
@@ -72,7 +86,7 @@ const contentDisplay = (() => {
     // add class, set select value and type then append
     label.classList.add(selectClass);
     label.for = selectClass;
-    
+
     select.name = selectClass;
     // loop through the priority options and add them into a dropdown
     for (let i = 0; i < options.length; i++) {
@@ -87,6 +101,14 @@ const contentDisplay = (() => {
     return select;
   }
 
+  const makeSidebar = () => {
+    const keys = Object.entries(localStorage)
+    const categories = [];
+
+    
+    console.log(Object.entries(localStorage))
+  }
+
   const loadPage = () => {
     // variables to easily change where items are anchored
     const taskCreatorCard = '.taskCreator';
@@ -98,20 +120,34 @@ const contentDisplay = (() => {
     makeDiv('main', 'body');
     // header
     makeDiv('header', main);
+    // sidebar will also display special categories
     makeDiv('sidebar', main);
+    makeSidebar();
     makeDiv('board', main);
-    
+
     // create a form to attach the task creation inputs to
     makeDiv('taskCreator', main);
-    makeForm('taskInput', sideBar)
+    makeForm('taskInput', sideBar);
     // create input fields for the task creation form
-    makeInput('name', taskInput, 'text')
-    makeInput('details', taskInput, 'text')
-    makeInput('due', taskInput, 'datetime-local', 'Due date:')
-    makeSelect('priority', taskInput, ['High', 'Medium', 'Low'], 'Priority')
-    makeButton('add', sideBar, 'Add Task', 'submit')
+    const nameInput = makeInput('name', taskInput, 'text', 'Task name:');
+    const detailsInput = makeInput('details', taskInput, 'text', 'Task details:');
+    const dateInput = makeInput('due', taskInput, 'datetime-local', 'Due date:');
+    const selectInput = makeSelect('priority', taskInput, ['High', 'Medium', 'Low'], 'Priority');
+    const categoryInput = makeInput('category', taskInput, 'text', 'Task category:');
+    const submitButton = makeButton('add', taskInput, 'Add Task', 'submit');
+    // set special IDs for grabbing data on submit button click
+    nameInput.id = 'nameInput';
+    detailsInput.id = 'detailsInput';
+    dateInput.id = 'dateInput';
+    selectInput.id = 'selectInput';
+    categoryInput.id = 'categoryInput';
+    submitButton.id = 'submitButton';
     // footer
     makeDiv('footer', main);
+
+    const taskButton = document.querySelector('.add');
+
+    submitButton.addEventListener('click', logicController.taskCreator);
   }
 
   const destroyPage = () => {
@@ -122,6 +158,7 @@ const contentDisplay = (() => {
   const reloadPage = () => {
     destroyPage();
     loadPage();
+    taskLoader();
   }
 
   const taskLoader = () => {
@@ -130,8 +167,8 @@ const contentDisplay = (() => {
       // select the task board to append the new element to
       const board = '.board';
       // select the current task
-      const task = localStorage[i];
-      console.log(localStorage[i]);
+      const key = Object.keys(localStorage)[i];
+      const task = JSON.parse(localStorage.getItem(key));
       // create the elements needed for the task card
       const div = makeDiv('taskCard', board);
       div.id = task.id;
@@ -141,14 +178,13 @@ const contentDisplay = (() => {
       const details = document.createElement('p');
       const due = document.createElement('p');
       const category = document.createElement('p');
-      
 
       // assign && render the info in the task object
       title.textContent = task.title;
-      details.textContent = task.textContent;
+      details.textContent = task.details;
       due.textContent = task.due;
       category.textContent = task.category;
-      
+    
       div.appendChild(title);
       div.appendChild(divider);
       div.appendChild(details);
@@ -156,30 +192,22 @@ const contentDisplay = (() => {
       div.appendChild(due);
 
       // since task IDs are based off of MD5s, we need to use CSS.escape to handle the IDs that start with numbers
-      const closeButton = makeButton('close', `#${CSS.escape(task.id)}`, 'X', 'button')
+      makeButton('close', `#${CSS.escape(task.id)}`, 'X', 'button')
       const select = makeSelect('priority', `#${CSS.escape(task.id)}`, ['High', 'Medium', 'Low'], 'Priority');
 
-      if (task.priority == 'High') {
-        select.selectedIndex = 0;
-      } else if (task.priority == 'Medium') {
-        select.selectedIndex = 1;
-      } else if (task.priority == 'Low') {
-        select.selectedIndex = 2;
-      }
-      
+      select.value = task.priority;
+
+      const removeTask = document.querySelectorAll('.close');
+      removeTask.forEach(button => button.addEventListener('click', taskRemover));
     }
+
   }
 
   const taskRemover = (click) => {
     click.stopPropagation();
-    click.preventDefault();
     const taskID = click.target.parentElement.id;
-    const list = taskList["tasks"];
-    for (let i = 0; i < list.length; i++){
-      if (list[i].id == taskID) {
-        list[i].removeFromList(taskList);
-      }
-    }
+    logicController.taskDestroyer(taskID);
+    reloadPage();
   }
 
   return { makeDiv, makeIMG, makeButton, makeInput, makeForm, makeSelect, loadPage, destroyPage, reloadPage, taskLoader, taskRemover }

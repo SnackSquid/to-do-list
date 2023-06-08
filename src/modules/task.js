@@ -8,18 +8,16 @@ class Task {
     this.category = category;
   }
 
-  updateTask(prop, newValue) {
-    return this.prop = newValue;
+  storeTask() {
+    const key = this.id;
+    const string = JSON.stringify(this)
+    return localStorage.setItem(key, string);
   }
 
-  addToList() {
-    return localStorage.tasks.push(this);
-  }
-
-  removeFromList(list) {
-    console.log(list)
-    list["deleted"].push(this);
-    return list["tasks"] = list["tasks"].filter(task => task.id != this.id);
+  removeTask() {
+    const key = this.id;
+    const string = JSON.stringify(this)
+    return localStorage.removeItem(key, string);
   }
 
   deleteTask(list) {
