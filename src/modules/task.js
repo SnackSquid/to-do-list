@@ -16,12 +16,7 @@ class Task {
 
   removeTask() {
     const key = this.id;
-    const string = JSON.stringify(this)
-    return localStorage.removeItem(key, string);
-  }
-
-  deleteTask(list) {
-    return list["deleted"] = list["deleted"].filter(task => task.id != this.id)
+    return localStorage.removeItem(key);
   }
 
 }

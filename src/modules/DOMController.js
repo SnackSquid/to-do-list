@@ -1,5 +1,6 @@
 import logicController from "./logicController";
-import 'lodash';
+import uniq from 'lodash/uniq';
+
 const contentDisplay = (() => {
 
   const makeDiv = (divClass, parentIdentifier) => {
@@ -102,11 +103,19 @@ const contentDisplay = (() => {
   }
 
   const makeSidebar = () => {
-    const keys = Object.entries(localStorage)
+    const keys = Object.keys(localStorage)
     const categories = [];
+    for (let i = 0; i < keys.length; i++) {
+      const temp = JSON.parse(localStorage.getItem(keys[i]))
+      categories.push(temp["category"])
+    }
+    const cleanList = uniq(categories)
 
+    for (let i = 0; i < cleanList.length; i++) {
+      const categoryDiv = makeDiv('category', '.sidebar')
+      categoryDiv.innerText = cleanList[i];
+    }
     
-    console.log(Object.entries(localStorage))
   }
 
   const loadPage = () => {
