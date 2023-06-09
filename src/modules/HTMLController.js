@@ -10,24 +10,35 @@ const HTMLController = (() => {
     return div;
   }
 
-  const makeHeader = (headerClass, parentIdentifier, headerLevel) => {
-    // select the parent to attach the new div to and create a div
-    const parent = document.querySelector(parentIdentifier);
+  const makeHeader = (headerClass, parentIdentifier, headerLevel, text) => {
     const headerTotal = 'h' + headerLevel;
     const header = document.createElement(headerTotal);
+    if (typeof parentIdentifier == 'object') {
+      parentIdentifier.appendChild(header)
+    } else {
+      // select the parent to attach the new div to and create a div
+      const parent = document.querySelector(parentIdentifier);
+      parent.appendChild(header);
+    }
     // add the div class and append it to the parent
     header.classList.add(headerClass);
-    parent.appendChild(div);
+    header.innerText = text;
+    
     return header;
   }
 
   const makeP = (pClass, parentIdentifier, innerText) => {
     // select the parent to attach the new div to and create a div
-    const parent = document.querySelector(parentIdentifier);
     const p = document.createElement('p');
+    if ((typeof parentIdentifier) == 'object') {
+      parentIdentifier.appendChild(p)
+    }else {
+      const parent = document.querySelector(parentIdentifier);
+      parent.appendChild(p);
+    }
     // add the div class and append it to the parent
     p.classList.add(pClass);
-    parent.appendChild(p);
+    
     if (innerText != null) {
       p.innerText = innerText;
     }
@@ -76,7 +87,7 @@ const HTMLController = (() => {
     }
     // add class, set input value and type then append
     label.classList.add(fieldClass);
-    label.for = fieldClass;
+    label.htmlFor = fieldClass;
     input.placeholder = `Enter task ${fieldClass}`;
     input.type = type;
     input.title = fieldClass;
