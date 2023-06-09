@@ -37,7 +37,6 @@ const contentDisplay = (() => {
     // create a form to attach the task creation inputs to
     HTMLController.makeDiv("taskCreator", main);
     const taskInputCard = HTMLController.makeForm("taskInput", taskCreatorCard);
-    showOrHideTaskCard();
     // create input fields for the task creation form
     const cancelButton = HTMLController.makeButton(
       "cancel",
@@ -82,7 +81,7 @@ const contentDisplay = (() => {
       "submit"
     );
     // create button to show the taskInputCard
-    const showTask = HTMLController.makeButton(
+    const showTaskButton = HTMLController.makeButton(
       "showTask",
       sideBar,
       "Add Task",
@@ -97,25 +96,26 @@ const contentDisplay = (() => {
     selectInput.id = "selectInput";
     categoryInput.id = "categoryInput";
     submitButton.id = "submitButton";
+    showTaskButton.id = "showTaskButton";
     // footer
     HTMLController.makeDiv("footer", main);
 
-    const showTaskButton = document.querySelector(".showTask");
     submitButton.addEventListener("click", logicController.taskCreator);
     showTaskButton.addEventListener("click", showOrHideTaskCard);
     cancelButton.addEventListener("click", showOrHideTaskCard);
+    showOrHideTaskCard();
   };
 
   const showOrHideTaskCard = () => {
     const taskCreator = document.querySelector(".taskCreator");
-    //const addTaskButton = document.querySelector(".showTask");
+    const showTask = document.getElementById("showTaskButton")
 
     if (taskCreator.classList.contains("hidden")) {
       taskCreator.classList.remove("hidden");
-      //addTaskButton.classList.add("hidden");
+      showTask.classList.add("hidden");
     } else {
       taskCreator.classList.add("hidden");
-      //addTaskButton.classList.remove("hidden");
+      showTask.classList.remove("hidden");
     }
   };
 
