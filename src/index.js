@@ -5,6 +5,7 @@ import contentDisplay from './modules/DOMController.js';
 import Task from './modules/task';
 import logicController from './modules/logicController';
 import storageController from './modules/storageController';
+import { format } from 'date-fns';
 
 // check to make sure local storage is enabled
 if (storageController.storage) {
@@ -14,7 +15,7 @@ if (storageController.storage) {
 }
 
 // test stuff, delete later
-const testDate = new Date();
+const testDate = format(new Date(), "yyyy-MM-dd")
 const testTask =  new Task('6241b155328acadfdfa617e96e712354', 'Test', 'This is a test task', testDate, 'Medium', 'Work');
 const testTask2 = new Task('9e92eede76647328dd2901be2b91b', 'Another Test!', 'This is another test task', testDate, 'Medium', 'Work');
 

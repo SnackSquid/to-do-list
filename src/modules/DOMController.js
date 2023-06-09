@@ -4,7 +4,8 @@ import HTMLController from "./HTMLController";
 
 const contentDisplay = (() => {
   const makeSidebar = () => {
-    const keys = Object.keys(localStorage);
+    
+    const keys = logicController.removeTempKey();
     const categories = [];
     for (let i = 0; i < keys.length; i++) {
       const temp = JSON.parse(localStorage.getItem(keys[i]));
@@ -54,7 +55,7 @@ const contentDisplay = (() => {
     const dateInput = HTMLController.makeInput(
       "due",
       taskInput,
-      "datetime-local",
+      "date",
       "Due date:"
     );
     const selectInput = HTMLController.makeSelect(
@@ -110,11 +111,13 @@ const contentDisplay = (() => {
   };
 
   const taskLoader = () => {
-    for (let i = 0; i < localStorage.length; i++) {
+    const keyList = logicController.removeTempKey();
+    for (let i = 0; i < keyList.length; i++) {
       // select the task board to append the new element to
       const board = ".board";
       // select the current task
-      const key = Object.keys(localStorage)[i];
+      
+      const key = keyList[i];
       const task = JSON.parse(localStorage.getItem(key));
       // create the elements needed for the task card
       const div = HTMLController.makeDiv("taskCard", board);
@@ -149,7 +152,7 @@ const contentDisplay = (() => {
       );
       const editTask = document.querySelectorAll(".edit");
       editTask.forEach((button) =>
-        button.addEventListener("click", taskEditor)
+        button.addEventListener("click", taskEditCardDisplay)
       );
     }
   };
@@ -161,7 +164,7 @@ const contentDisplay = (() => {
     reloadPage();
   };
 
-  const taskEditor = (click) => {
+  const taskEditCardDisplay = (click) => {
     click.stopPropagation();
     const taskID = click.target.parentElement.id;
     const task = JSON.parse(localStorage.getItem(taskID));
@@ -172,20 +175,37 @@ const contentDisplay = (() => {
     const due = document.getElementById("dateInput");
     const priority = document.getElementById("selectInput")
     const category = document.getElementById("categoryInput")
+    const button = document.getElementById("submitButton")
+    localStorage.temp = taskID;
     title.value = task.title;
     details.value = task.details;
     due.value = task.due;
-    console.log(due.value)
-
+    priority.value = task.priority
+    category.value = task.category;
+    setTaskCardButton(button);
   };
+
+  const setTaskCardButton = (button) => {
+    console.log(button)
+    if (button.id == "submitButton") {
+      button.id = "editButton";
+      button.innerText = "Edit task";
+      button.removeEventListener("click", logicController.taskCreator)
+      button.addEventListener("click", logicController.taskEditor)
+    } else if (button.id == "editButton") {
+      button.id = "submitButton";
+      button.innerText = "Add task";
+      button.removeEventListener("click", logicController.taskEditor)
+      button.addEventListener("click", logicController.taskCreator) 
+    }
+  }
 
   return {
     loadPage,
-    destroyPage,
     reloadPage,
     taskLoader,
     taskRemover,
-    taskEditor,
+    setTaskCardButton
   };
 })();
 
