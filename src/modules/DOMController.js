@@ -10,12 +10,16 @@ const contentDisplay = (() => {
       const temp = JSON.parse(localStorage.getItem(keys[i]));
       categories.push(temp["category"]);
     }
+    // clear duplicate values
     const cleanList = uniq(categories);
+    cleanList.unshift("All");
+    const form = HTMLController.makeForm("categories", ".sidebar");
 
     for (let i = 0; i < cleanList.length; i++) {
-      const categoryDiv = HTMLController.makeDiv("categoryCard", ".sidebar");
-      categoryDiv.innerText = cleanList[i];
+      const categoryDisplay = HTMLController.makeList("categoryCard", form, cleanList[i]);
     }
+    
+    
   };
   const loadPage = () => {
     // variables to easily change where items are anchored
