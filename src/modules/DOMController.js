@@ -4,7 +4,6 @@ import HTMLController from "./HTMLController";
 
 const contentDisplay = (() => {
   const makeSidebar = () => {
-    
     const keys = logicController.removeTempKey();
     const categories = [];
     for (let i = 0; i < keys.length; i++) {
@@ -37,9 +36,15 @@ const contentDisplay = (() => {
     HTMLController.makeDiv("board", main);
     // create a form to attach the task creation inputs to
     HTMLController.makeDiv("taskCreator", main);
-    const taskInputCard = HTMLController.makeForm("taskInput", main);
-    taskInputCard.classList.add("hidden");
+    const taskInputCard = HTMLController.makeForm("taskInput", taskCreatorCard);
+    showOrHideTaskCard();
     // create input fields for the task creation form
+    const cancelButton = HTMLController.makeButton(
+      "cancel",
+      taskInput,
+      "x",
+      "reset"
+    );
     const titleInput = HTMLController.makeInput(
       "title",
       taskInput,
@@ -85,6 +90,7 @@ const contentDisplay = (() => {
     );
     // set special IDs for grabbing data on submit button click
     // I know I should just edit the HTML maker module but this is faster for now
+    cancelButton.id = "cancelButton";
     titleInput.id = "titleInput";
     detailsInput.id = "detailsInput";
     dateInput.id = "dateInput";
@@ -94,9 +100,23 @@ const contentDisplay = (() => {
     // footer
     HTMLController.makeDiv("footer", main);
 
-    const taskButton = document.querySelector(".add");
-
+    const showTaskButton = document.querySelector(".showTask");
     submitButton.addEventListener("click", logicController.taskCreator);
+    showTaskButton.addEventListener("click", showOrHideTaskCard);
+    cancelButton.addEventListener("click", showOrHideTaskCard);
+  };
+
+  const showOrHideTaskCard = () => {
+    const taskCreator = document.querySelector(".taskCreator");
+    //const addTaskButton = document.querySelector(".showTask");
+
+    if (taskCreator.classList.contains("hidden")) {
+      taskCreator.classList.remove("hidden");
+      //addTaskButton.classList.add("hidden");
+    } else {
+      taskCreator.classList.add("hidden");
+      //addTaskButton.classList.remove("hidden");
+    }
   };
 
   const destroyPage = () => {
@@ -116,7 +136,7 @@ const contentDisplay = (() => {
       // select the task board to append the new element to
       const board = ".board";
       // select the current task
-      
+
       const key = keyList[i];
       const task = JSON.parse(localStorage.getItem(key));
       // create the elements needed for the task card
@@ -169,43 +189,43 @@ const contentDisplay = (() => {
     const taskID = click.target.parentElement.id;
     const task = JSON.parse(localStorage.getItem(taskID));
     const taskInput = document.querySelector(".taskInput");
-    taskInput.classList.remove("hidden");
+    showOrHideTaskCard();
     const title = document.getElementById("titleInput");
     const details = document.getElementById("detailsInput");
     const due = document.getElementById("dateInput");
-    const priority = document.getElementById("selectInput")
-    const category = document.getElementById("categoryInput")
-    const button = document.getElementById("submitButton")
+    const priority = document.getElementById("selectInput");
+    const category = document.getElementById("categoryInput");
+    const button = document.getElementById("submitButton");
     localStorage.temp = taskID;
     title.value = task.title;
     details.value = task.details;
     due.value = task.due;
-    priority.value = task.priority
+    priority.value = task.priority;
     category.value = task.category;
     setTaskCardButton(button);
   };
 
   const setTaskCardButton = (button) => {
-    console.log(button)
+    console.log(button);
     if (button.id == "submitButton") {
       button.id = "editButton";
       button.innerText = "Edit task";
-      button.removeEventListener("click", logicController.taskCreator)
-      button.addEventListener("click", logicController.taskEditor)
+      button.removeEventListener("click", logicController.taskCreator);
+      button.addEventListener("click", logicController.taskEditor);
     } else if (button.id == "editButton") {
       button.id = "submitButton";
       button.innerText = "Add task";
-      button.removeEventListener("click", logicController.taskEditor)
-      button.addEventListener("click", logicController.taskCreator) 
+      button.removeEventListener("click", logicController.taskEditor);
+      button.addEventListener("click", logicController.taskCreator);
     }
-  }
+  };
 
   return {
     loadPage,
     reloadPage,
     taskLoader,
     taskRemover,
-    setTaskCardButton
+    setTaskCardButton,
   };
 })();
 

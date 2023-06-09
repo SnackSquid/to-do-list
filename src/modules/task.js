@@ -19,12 +19,6 @@ class Task {
     return localStorage.removeItem(key);
   }
 
-  editTask() {
-    const key = this.id;
-    const string = JSON.stringify(this)
-    return localStorage.setItem(key, string);
-  }
-
 }
 
 export default Task;

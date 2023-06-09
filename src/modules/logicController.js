@@ -1,7 +1,7 @@
 import "md5";
 import Task from "./task";
 import contentDisplay from "./DOMController";
-import { format } from "date-fns";
+
 // needed to import md5
 const md5 = require("md5");
 
@@ -39,13 +39,13 @@ const logicController = (() => {
   };
 
   const taskDestroyer = (taskID) => {
+    // cleaner to have a named function even though it is very simple
     localStorage.removeItem(taskID);
   };
 
   const taskEditor = (click) => {
-    console.log("Taskeditor")
     click.preventDefault();
-    click.stopPropagation();
+    // gathering all the data from the task form
     const id = localStorage.temp;
     const title = document.getElementById("titleInput").value;
     const details = document.getElementById("detailsInput").value;
@@ -54,6 +54,8 @@ const logicController = (() => {
     const category = document.getElementById("categoryInput").value;
     const button = document.getElementById("editButton")
 
+    // looop through values to make sure there aren't
+    // any blank fields
     const values = [id, title, details, date, priority, category];
     let makeTask = true;
     for (let i = 0; i < values.length; i++) {
@@ -61,19 +63,21 @@ const logicController = (() => {
         makeTask = false;
       }
     }
-    
+    // since there are no blank fields create a new task and update the
+    // task at the index
     if (makeTask) {
       const updateTask = new Task(id, title, details, date, priority, category);
-      updateTask.editTask();
+      updateTask.storeTask();
       contentDisplay.reloadPage();
     } else {
       alert("Enter a value for every task field");
     }
-    console.log(button)
+    // set our edit button back to the edit button
     contentDisplay.setTaskCardButton(button);
   };
 
   const removeTempKey = () => {
+    // strip out the temp key since it's only for editing tasks
     const tempKeys = Object.keys(localStorage);
     const keys = tempKeys.filter(key => key != "temp")
     return keys
