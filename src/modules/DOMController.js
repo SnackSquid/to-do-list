@@ -4,40 +4,35 @@ import HTMLController from "./HTMLController";
 
 const contentDisplay = (() => {
   const makeSidebar = () => {
+    // get a list of keys but remove the 'temp' key since it is not a real task
     const keys = logicController.removeTempKey();
+    // empty list to put the keys into
     const categories = [];
     for (let i = 0; i < keys.length; i++) {
+      // get the data from locastorage, parsing it into JSON
       const temp = JSON.parse(localStorage.getItem(keys[i]));
       categories.push(temp["category"]);
     }
-    // clear duplicate values
+    // clear duplicate category values
     const cleanList = uniq(categories);
     cleanList.unshift("All");
-    const form = HTMLController.makeForm("categories", ".sidebar");
 
     for (let i = 0; i < cleanList.length; i++) {
-      const categoryDisplay = HTMLController.makeList("categoryCard", form, cleanList[i]);
+      const form = HTMLController.makeForm("categories", ".sidebar");
+      const categoryDisplay = HTMLController.makeList(
+        "categoryCard",
+        form,
+        cleanList[i]
+      );
     }
-    
-    
   };
-  const loadPage = () => {
-    // variables to easily change where items are anchored
+
+  const makeTaskInputCard = () => {
     const taskCreatorCard = ".taskCreator";
     const taskInput = ".taskInput";
     const main = ".main";
     const sideBar = ".sidebar";
 
-    // build the page main div is the anchor of the page
-    HTMLController.makeDiv("main", "body");
-    // header and title
-    HTMLController.makeDiv("header", main);
-    HTMLController.makeHeader("title", ".header", 1, "To-Do-ification");
-    // sidebar will also display task categories
-    HTMLController.makeDiv("sidebar", main);
-    makeSidebar();
-    // create the "board" that displays task cards
-    HTMLController.makeDiv("board", main);
     // create a form to attach the task creation inputs to
     HTMLController.makeDiv("taskCreator", main);
     const taskInputCard = HTMLController.makeForm("taskInput", taskCreatorCard);
@@ -101,9 +96,27 @@ const contentDisplay = (() => {
     categoryInput.id = "categoryInput";
     submitButton.id = "submitButton";
     showTaskButton.id = "showTaskButton";
+
+  }
+
+  const loadPage = () => {
+    // variables to easily change where items are anchored
+    const main = ".main";
+    
+    // build the page main div is the anchor of the page
+    HTMLController.makeDiv("main", "body");
+    // header and title
+    HTMLController.makeDiv("header", main);
+    HTMLController.makeHeader("title", ".header", 1, "To-Do-ification");
+    // sidebar will also display task categories
+    HTMLController.makeDiv("sidebar", main);
+    makeSidebar();
+    makeTaskInputCard();
+    // create the "board" that displays task cards
+    HTMLController.makeDiv("board", main);
     // footer
     HTMLController.makeDiv("footer", main);
-
+    // add event listeners etc.
     submitButton.addEventListener("click", logicController.taskCreator);
     showTaskButton.addEventListener("click", showOrHideTaskCard);
     cancelButton.addEventListener("click", showOrHideTaskCard);
@@ -112,7 +125,7 @@ const contentDisplay = (() => {
 
   const showOrHideTaskCard = () => {
     const taskCreator = document.querySelector(".taskCreator");
-    const showTask = document.getElementById("showTaskButton")
+    const showTask = document.getElementById("showTaskButton");
 
     if (taskCreator.classList.contains("hidden")) {
       taskCreator.classList.remove("hidden");

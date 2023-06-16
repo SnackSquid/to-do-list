@@ -3,17 +3,28 @@
 }
 
 body {
-  margin: 0;
-  margin: 0;
+  margin: 0px;
+  margin: 0px;
 }
 
 h1, h2, h3, h4, h5, p {
-  padding: 0;
-  margin: 0;
+  padding: 0px;
+  margin: 0px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
 }
 
 button:hover {
   background-color: lightgrey;
+}
+
+button {
+  border-style: none;
+  border-radius: 10px;
 }
 
 .main {
@@ -23,6 +34,10 @@ button:hover {
   display: grid;
   grid-template-columns: minmax(75px, 1fr) minmax(150px, 3fr);
   grid-template-rows: minmax(50px, 75px) minmax(150px, 1fr) minmax(50px, 75px);
+}
+
+#selected {
+  background-color: aquamarine;
 }
 
 .taskCreator {}
@@ -44,6 +59,10 @@ button:hover {
   color: white;
 }
 
+.categories {
+  display: grid;
+}
+
 .categoryCard {
   display: grid;
   align-items: center;
@@ -59,15 +78,52 @@ button:hover {
   grid-column: 1 / 2;
   display: grid;
   grid-template-rows:
-    minmax(50px, 100px)
+    minmax(50px, 1fr)
     repeat(5, 1fr);
   background-color: grey;
+}
+
+.showTask {
+  grid-row: 6 / 7;
+  border-style: none;
+  border-radius: 20px;
+  margin: 10px;
+  font-size: larger;
+  font-weight: 700;
 }
 
 .taskInput {
   padding: 20px;
   display: grid;
   grid-row: 6/7;
+}
+
+.taskCard {
+  padding: 15px;
+  background-color: lightblue;
+  display: grid;
+  border-radius: 7px;
+  grid-template-columns: 140px 35px;
+}
+
+.taskTitle {
+  grid-row: 1 / 2;
+}
+
+.details {
+  grid-column: 1 / 3;
+}
+
+.edit {
+  grid-column: 2 / 3;
+}
+
+.close {
+  grid-column: 2 / 3;
+  grid-row: 1;
+  height: 30px;
+  width: 30px;
+  justify-self: end;
 }
 
 .board {
